@@ -30,7 +30,7 @@ const MaxDepth = 5
 const DefaultOrgID = "c1556e17-b7c0-45a3-a6ae-9546248fb17a"
 
 // alternative orgId used for error testing
-const AlternativeOrgID = "c1556e17-b7c0-45a3-a6ae-9546248fb17a"
+const AlternativeOrgID = "c1556e17-b7c0-45a3-a6ae-9546248fb17b"
 
 type Folder struct {
 	Name  string    `json:"name"`
