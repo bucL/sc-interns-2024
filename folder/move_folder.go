@@ -1,6 +1,8 @@
 package folder
 
-func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
+import "github.com/gofrs/uuid"
+
+func (f *driver) MoveFolder(orgID uuid.UUID, source string, dst string) ([]Folder, error) {
 	// Your code here...
 
 	return []Folder{}, nil

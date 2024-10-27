@@ -13,7 +13,8 @@ type IDriver interface {
 	// component 2
 	// Implement the following methods:
 	// MoveFolder moves a folder to a new destination.
-	MoveFolder(name string, dst string) ([]Folder, error)
+	// added orgID as a passed in field.
+	MoveFolder(orgID uuid.UUID, source string, dst string) ([]Folder, error)
 }
 
 type driver struct {
