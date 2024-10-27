@@ -9,13 +9,21 @@ import (
 
 func (f *driver) MoveFolder(orgID uuid.UUID, source string, dst string) ([]Folder, error) {
 	// Retrieve all folders for the specified organization
-	folders, err := f.GetFoldersByOrgID(orgID)
-	if err != nil {
-		return []Folder{}, err
-	}
+	folders := f.folders
 
 	sourcePath := findFullPath(folders, source)
 	destinationPath := findFullPath(folders, dst)
+
+	// Check OrgID of destination because checking orgID of source is done when calling GetAllChildFolders below.
+	for folder := range folders {
+		if folders[folder].Paths == destinationPath {
+			if folders[folder].OrgId != orgID {
+				return []Folder{}, fmt.Errorf("no folder with specified orgId found")
+			} else {
+				break
+			}
+		}
+	}
 
 	if sourcePath == "" {
 		return []Folder{}, fmt.Errorf("source folder doesn't exist")
