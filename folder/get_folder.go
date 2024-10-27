@@ -2,6 +2,7 @@ package folder
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/gofrs/uuid"
 )
@@ -20,7 +21,7 @@ func (f *driver) GetFoldersByOrgID(orgID uuid.UUID) ([]Folder, error) {
 		}
 	}
 	if len(res) == 0 {
-		return nil, fmt.Errorf("no folder with specified orgId found")
+		return res, fmt.Errorf("no folder with specified orgId found")
 	}
 	return res, nil
 
@@ -31,13 +32,47 @@ func (f *driver) GetFoldersByOrgID(orgID uuid.UUID) ([]Folder, error) {
 ** this organisation" as I felt that error message and checking for that in general was insecure and not
 ** necessary for the task this function will be trying to achieve as you can eliminate all folders not of
 ** the specified organisation in GetFoldersByOrgID.
+**
+** I considered using a map here to significantly increase the speed of saerch with large data sets however
+** because we can have mulitple different orgID's to search for I couldn't find a solution that would provide
+** the same benefits without having the trade of needing to regenerate the map for each orgID every time.
+**
  */
 func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) ([]Folder, error) {
 	folders, err := f.GetFoldersByOrgID(orgID)
 	if err != nil {
-		return nil, err
+		return folders, err
 	}
-	// implementation below
+	children := []Folder{}
 
-	return []Folder{}, nil
+	folderPath := findFullPath(f.folders, name)
+	if folderPath == "" {
+		return children, fmt.Errorf("folder does not exist")
+	}
+
+	depthCountParent := len(strings.Split(folderPath, "."))
+
+	// Collect all child folders by comparing depthCount.
+	for _, folder := range folders {
+		if strings.HasPrefix(folder.Paths, folderPath+".") {
+			depthCountChild := len(strings.Split(folder.Paths, "."))
+			if depthCountChild == depthCountParent+1 {
+				children = append(children, folder)
+			}
+		}
+	}
+	return children, nil
+}
+
+/* findFullPath searches for the full path of a folder by its name using the string Split functionality
+** to separate each folder from the path.
+ */
+func findFullPath(folders []Folder, name string) string {
+	for _, folder := range folders {
+		segments := strings.Split(folder.Paths, ".")
+		if segments[len(segments)-1] == name {
+			return folder.Paths
+		}
+	}
+	return ""
 }
