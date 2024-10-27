@@ -24,7 +24,9 @@ func main() {
 
 	// fmt.Println(error)
 
-	// input handling
+	// input handling for component 1
+	// adapted from my work here: https://github.com/bucL/sc-interns-takehometask/blob/main/main.go
+
 	var input string
 	for input != "exit" {
 		fmt.Println("Enter a folder path")
@@ -32,9 +34,10 @@ func main() {
 		if input != "exit" {
 			folders, err := folderDriver.GetAllChildFolders(orgID, input)
 			if err != nil {
-				fmt.Println(err)
+				fmt.Printf("%s\n", err)
+			} else {
+				folder.PrettyPrint(folders)
 			}
-			folder.PrettyPrint(folders)
 		}
 	}
 }
