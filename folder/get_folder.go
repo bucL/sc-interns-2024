@@ -50,15 +50,10 @@ func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) ([]Folder, err
 		return children, fmt.Errorf("folder does not exist")
 	}
 
-	depthCountParent := len(strings.Split(folderPath, "."))
-
-	// Collect all child folders by comparing depthCount.
+	// Collect all child folders by checking if they are contained
 	for _, folder := range folders {
-		if strings.HasPrefix(folder.Paths, folderPath+".") {
-			depthCountChild := len(strings.Split(folder.Paths, "."))
-			if depthCountChild == depthCountParent+1 {
-				children = append(children, folder)
-			}
+		if strings.Contains(folder.Paths, folderPath+".") {
+			children = append(children, folder)
 		}
 	}
 	return children, nil
