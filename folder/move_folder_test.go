@@ -59,12 +59,12 @@ func Test_folder_MoveFolder(t *testing.T) {
 					{
 						Name:  "bravo",
 						OrgId: uuid.FromStringOrNil(folder.DefaultOrgID),
-						Paths: "alpha.charlie.bravo",
+						Paths: "charlie.bravo",
 					},
 					{
 						Name:  "delta",
 						OrgId: uuid.FromStringOrNil(folder.DefaultOrgID),
-						Paths: "alpha.charlie.bravo.delta",
+						Paths: "charlie.bravo.delta",
 					},
 				},
 				err: nil,
@@ -98,7 +98,7 @@ func Test_folder_MoveFolder(t *testing.T) {
 			},
 			want: testingReturn{
 				folders: []folder.Folder{},
-				err:     fmt.Errorf("folder does not exist"),
+				err:     fmt.Errorf("no folder with specified orgId found"),
 			},
 		},
 		{
@@ -229,7 +229,7 @@ func Test_folder_MoveFolder(t *testing.T) {
 			name:        "destination doesn't exist",
 			orgID:       uuid.FromStringOrNil(folder.DefaultOrgID),
 			source:      "bravo",
-			destination: "bravo",
+			destination: "foxtrot",
 			folders: []folder.Folder{
 				{
 					Name:  "Alpha",
@@ -253,7 +253,7 @@ func Test_folder_MoveFolder(t *testing.T) {
 			},
 			want: testingReturn{
 				folders: []folder.Folder{},
-				err:     fmt.Errorf("detination folder doesn't exist"),
+				err:     fmt.Errorf("destination folder doesn't exist"),
 			},
 		},
 	}
